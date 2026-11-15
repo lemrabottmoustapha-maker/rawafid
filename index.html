@@ -1,0 +1,395 @@
+<!doctype html>
+<html lang="ar" dir="rtl" style="color-scheme: light dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="روافد: موقع للثقافة والشعر الموريتاني">
+<title>روافد</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=Reem+Kufi:wght@500;700&display=swap">
+<style>
+/* Layout concept: a river map. Five tributaries (the tabs) start at the top and converge into one stream; the chosen tributary opens below as its own chapter. */
+:root {
+  --bg: #EDF0F4;
+  --surface: #FFFFFF;
+  --fg: #0F1A38;
+  --muted: #475273;
+  --line: #C6CEDC;
+  --accent: #9C500E;
+  --accent-soft: #F0E3CF;
+  --hero-bg: #142257;
+  --hero-fg: #F1E8D2;
+  --hero-gold: #E0AE4B;
+  --hero-dim: #AAB4D6;
+  --font-display: "Reem Kufi", "Amiri", "Noto Naskh Arabic", serif;
+  --font-text: "Amiri", "Noto Naskh Arabic", "Times New Roman", serif;
+  --font-ui: "IBM Plex Sans Arabic", "Segoe UI", Tahoma, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0A1130;
+    --surface: #111C45;
+    --fg: #ECE5D3;
+    --muted: #A9B1C9;
+    --line: #27356B;
+    --accent: #E0AE4B;
+    --accent-soft: #1D2754;
+    --hero-bg: #0D1740;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0A1130;
+  --surface: #111C45;
+  --fg: #ECE5D3;
+  --muted: #A9B1C9;
+  --line: #27356B;
+  --accent: #E0AE4B;
+  --accent-soft: #1D2754;
+  --hero-bg: #0D1740;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--bg);
+  color: var(--fg);
+  direction: rtl;
+  font-family: var(--font-ui);
+  font-size: 16px;
+  line-height: 1.85;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+a { color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.wrap { max-width: 1080px; margin-inline: auto; }
+.bleed { margin-inline: calc(-1 * max(16px, env(safe-area-inset-right, 0px))); padding-inline: max(16px, env(safe-area-inset-right, 0px)); }
+
+/* header */
+.top {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 24px;
+  padding-block: 18px;
+}
+.logo { font-family: var(--font-display); font-weight: 700; font-size: 30px; text-decoration: none; line-height: 1.2; }
+.top nav { display: flex; flex-wrap: wrap; gap: 4px 22px; font-size: 15px; }
+.top nav a { text-decoration: none; color: var(--muted); padding: 4px 0; border-bottom: 1px solid transparent; }
+.top nav a:hover { color: var(--fg); border-color: var(--accent); }
+
+/* hero */
+.hero {
+  background-color: var(--hero-bg);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='56'%3E%3Cpath d='M28 3 53 28 28 53 3 28Z' fill='none' stroke='%23E0AE4B' stroke-opacity='.09'/%3E%3Cpath d='M28 17 39 28 28 39 17 28Z' fill='none' stroke='%23E0AE4B' stroke-opacity='.07'/%3E%3C/svg%3E");
+  color: var(--hero-fg);
+  padding-block: 56px 0;
+}
+.hero .eyebrow { font-size: 14px; letter-spacing: .04em; color: var(--hero-gold); margin: 0 0 4px; }
+.hero h1 {
+  font-family: var(--font-display); font-weight: 700;
+  font-size: clamp(72px, 16vw, 160px); line-height: 1.05; margin: 0 0 12px;
+}
+.hero .lead {
+  font-family: var(--font-text); font-size: clamp(20px, 2.8vw, 27px); line-height: 1.8;
+  max-width: 34em; margin: 0 0 40px; color: var(--hero-fg); text-wrap: balance;
+}
+.tribs { display: grid; grid-template-columns: repeat(5, 1fr); margin: 0; padding: 0; list-style: none; }
+.tribs li { min-width: 0; }
+.trib {
+  width: 100%; background: none; border: 0; color: var(--hero-dim); cursor: pointer;
+  font: 500 15px/1.5 var(--font-ui); padding: 10px 2px 12px; text-align: center;
+  border-bottom: 2px solid transparent;
+}
+.trib:hover, .trib[aria-selected="true"] { color: var(--hero-fg); }
+.trib[aria-selected="true"] { border-bottom-color: var(--hero-gold); }
+.river { display: block; width: 100%; height: auto; max-height: 300px; }
+.river .base { fill: none; stroke: var(--hero-gold); stroke-width: 1.5; opacity: .3; transition: opacity .3s, stroke-width .3s; }
+.river .flow { fill: none; stroke: var(--hero-gold); stroke-width: 2; stroke-dasharray: 3 11; stroke-linecap: round; opacity: .55; animation: flow 9s linear infinite; transition: opacity .3s; }
+.river g.on .base { opacity: .9; stroke-width: 3; }
+.river g.on .flow { opacity: 1; }
+.river .mouth { fill: var(--hero-gold); }
+.river .ring { fill: none; stroke: var(--hero-gold); opacity: .4; }
+@keyframes flow { to { stroke-dashoffset: -28; } }
+@media (prefers-reduced-motion: reduce) { .river .flow { animation: none; } }
+
+/* chapter */
+.chapter { padding-block: 56px 24px; display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 40px; align-items: start; }
+.chapter h2 { font-family: var(--font-display); font-weight: 700; font-size: clamp(30px, 5vw, 44px); line-height: 1.3; margin: 0 0 16px; text-wrap: balance; }
+.chapter p { font-family: var(--font-text); font-size: 21px; line-height: 2; margin: 0 0 16px; max-width: 36em; }
+.terms { background: var(--surface); border: 1px solid var(--line); border-radius: 3px; padding: 22px 24px; margin: 0; min-width: 0; }
+.terms h3 { margin: 0 0 12px; font-size: 14px; font-weight: 600; letter-spacing: .04em; color: var(--accent); }
+.terms dl { margin: 0; display: grid; gap: 14px; }
+.terms dt { font-family: var(--font-display); font-weight: 700; font-size: 20px; line-height: 1.5; }
+.terms dd { margin: 0; color: var(--muted); font-size: 15px; line-height: 1.8; }
+@media (max-width: 760px) { .chapter { grid-template-columns: minmax(0, 1fr); gap: 24px; padding-block-start: 40px; } .chapter p { font-size: 20px; } }
+
+/* sections */
+section.block { padding-block: 56px; border-top: 1px solid var(--line); }
+.block h2 { font-family: var(--font-display); font-weight: 700; font-size: clamp(28px, 4.4vw, 40px); line-height: 1.35; margin: 0 0 8px; }
+.block .sub { color: var(--muted); margin: 0 0 28px; max-width: 40em; }
+.voices { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 18px; margin: 0; padding: 0; list-style: none; }
+.voice { background: var(--surface); border: 1px solid var(--line); border-radius: 3px; padding: 22px; min-width: 0; }
+.voice h3 { font-family: var(--font-display); font-weight: 700; font-size: 21px; line-height: 1.5; margin: 0 0 4px; text-wrap: balance; }
+.voice .tag { font-size: 13px; color: var(--accent); margin: 0 0 10px; font-weight: 500; }
+.voice p { margin: 0; font-size: 15px; line-height: 1.85; color: var(--muted); }
+
+/* contribute */
+.contribute { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 40px; align-items: start; }
+@media (max-width: 760px) { .contribute { grid-template-columns: minmax(0, 1fr); } }
+form { display: grid; gap: 14px; }
+label { display: grid; gap: 6px; font-size: 14px; font-weight: 500; }
+input, textarea {
+  font: 400 17px/1.7 var(--font-text); color: var(--fg); background: var(--surface);
+  border: 1px solid var(--line); border-radius: 3px; padding: 10px 12px; width: 100%;
+}
+textarea { min-height: 150px; resize: vertical; }
+.row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+button.primary {
+  font: 600 15px/1 var(--font-ui); background: var(--fg); color: var(--bg); border: 0; border-radius: 3px;
+  padding: 13px 22px; cursor: pointer;
+}
+button.quiet { font: 500 14px/1 var(--font-ui); background: none; color: var(--muted); border: 0; padding: 10px 4px; cursor: pointer; text-decoration: underline; }
+.note { font-size: 13px; color: var(--muted); line-height: 1.8; margin: 0; }
+.shelf { display: grid; gap: 14px; margin: 0; padding: 0; list-style: none; }
+.piece { background: var(--surface); border: 1px solid var(--line); border-radius: 3px; padding: 18px 20px; min-width: 0; }
+.piece h3 { font-family: var(--font-display); font-weight: 700; font-size: 19px; margin: 0 0 6px; }
+.piece pre { font: 400 19px/2 var(--font-text); white-space: pre-wrap; overflow-wrap: anywhere; margin: 0 0 8px; }
+.piece .by { font-size: 13px; color: var(--muted); }
+.empty { border: 1px dashed var(--line); border-radius: 3px; padding: 26px 22px; color: var(--muted); font-size: 15px; }
+.empty strong { display: block; font-family: var(--font-display); font-size: 19px; color: var(--fg); margin-bottom: 4px; }
+
+footer { border-top: 1px solid var(--line); padding-block: 32px 40px; color: var(--muted); font-size: 14px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 24px; }
+footer .logo { font-size: 22px; color: var(--fg); }
+</style>
+
+<style>body{margin:0}[hidden]{display:none!important}img{max-width:100%}</style>
+</head>
+<body>
+<div lang="ar" dir="rtl">
+  <div class="wrap">
+    <header class="top">
+      <a class="logo" href="#top">روافد</a>
+      <nav aria-label="أقسام الموقع">
+        <a href="#chapter">الروافد</a>
+        <a href="#voices">أعلام</a>
+        <a href="#contribute">ساهم</a>
+      </nav>
+    </header>
+  </div>
+
+  <div class="hero bleed" id="top">
+    <div class="wrap">
+      <p class="eyebrow">ثقافة بلاد شنقيط وشعرها</p>
+      <h1>روافد</h1>
+      <p class="lead">مجرى واحد تصبّ فيه روافد كثيرة: لغن في مجالس الحي، ومنظومات المحظرة، وأوتار التيدنيت، ومخطوطات المدن القديمة.</p>
+      <ul class="tribs" role="tablist" aria-label="روافد الثقافة الموريتانية" id="tabs"></ul>
+      <svg class="river" viewBox="0 0 800 300" aria-hidden="true" preserveAspectRatio="xMidYMax meet" id="river">
+        <g data-i="0"><path class="base" d="M720 0 C720 130 410 120 400 270"/><path class="flow" d="M720 0 C720 130 410 120 400 270"/></g>
+        <g data-i="1"><path class="base" d="M560 0 C560 140 405 150 400 270"/><path class="flow" d="M560 0 C560 140 405 150 400 270"/></g>
+        <g data-i="2"><path class="base" d="M400 0 C400 90 400 180 400 270"/><path class="flow" d="M400 0 C400 90 400 180 400 270"/></g>
+        <g data-i="3"><path class="base" d="M240 0 C240 140 395 150 400 270"/><path class="flow" d="M240 0 C240 140 395 150 400 270"/></g>
+        <g data-i="4"><path class="base" d="M80 0 C80 130 390 120 400 270"/><path class="flow" d="M80 0 C80 130 390 120 400 270"/></g>
+        <circle class="ring" cx="400" cy="278" r="14"/>
+        <circle class="mouth" cx="400" cy="278" r="5"/>
+      </svg>
+    </div>
+  </div>
+
+  <main class="wrap">
+    <article class="chapter" id="chapter" role="tabpanel" aria-live="polite">
+      <div>
+        <h2 id="ch-title"></h2>
+        <div id="ch-body"></div>
+      </div>
+      <aside class="terms" aria-label="مصطلحات">
+        <h3>مصطلحات</h3>
+        <dl id="ch-terms"></dl>
+      </aside>
+    </article>
+
+    <section class="block" id="voices">
+      <h2>أعلام من الضفاف</h2>
+      <p class="sub">أسماء مرّت بهذه الروافد وتركت فيها أثراً. القائمة بداية، وتكبر بما تضيفه أنت.</p>
+      <ul class="voices">
+        <li class="voice">
+          <h3>سيدي عبد الله بن الحاج إبراهيم</h3>
+          <p class="tag">عالم وناظم</p>
+          <p>صاحب «مراقي السعود»، منظومة في أصول الفقه المالكي، ما زالت تُحفظ وتُشرح في المحاظر.</p>
+        </li>
+        <li class="voice">
+          <h3>أحمد بن الأمين الشنقيطي</h3>
+          <p class="tag">مؤرّخ للأدب</p>
+          <p>صاحب «الوسيط في تراجم أدباء شنقيط»، جمع فيه سير علماء البلاد وأدبائها ونماذج من شعرهم. يرجع إليه كل من يدرس أدب شنقيط.</p>
+        </li>
+        <li class="voice">
+          <h3>محمد الأمين الشنقيطي</h3>
+          <p class="tag">مفسّر وفقيه، 1905–1974</p>
+          <p>تخرّج في المحظرة وألّف «أضواء البيان في إيضاح القرآن بالقرآن». يُذكر مثالاً على ما تصنعه المحظرة من علماء.</p>
+        </li>
+        <li class="voice">
+          <h3>أحمد ولد عبد القادر</h3>
+          <p class="tag">شاعر</p>
+          <p>من شعراء موريتانيا في العصر الحديث، ويُقرأ اسمه كثيراً في الحديث عن الشعر الموريتاني المعاصر.</p>
+        </li>
+      </ul>
+    </section>
+
+    <section class="block" id="contribute">
+      <h2>ركن المساهمة</h2>
+      <p class="sub">اكتب بيتاً أو مقطوعة من نظمك. يحفظ الركن ما تكتبه في هذا المتصفح فقط، ولا يراه غيرك.</p>
+      <div class="contribute">
+        <form id="form" novalidate>
+          <label for="f-title">عنوان النص
+            <input id="f-title" type="text" maxlength="80" autocomplete="off">
+          </label>
+          <label for="f-text">النص
+            <textarea id="f-text" maxlength="800" required></textarea>
+          </label>
+          <label for="f-name">اسمك
+            <input id="f-name" type="text" maxlength="60" autocomplete="off">
+          </label>
+          <p class="note">أرسل نصاً كتبته أنت فقط. لا تنسخ قصائد غيرك.</p>
+          <div class="row">
+            <button class="primary" type="submit">أضف إلى الرف</button>
+            <button class="quiet" type="button" id="clear" hidden>مسح الكل</button>
+            <span class="note" id="msg" role="status"></span>
+          </div>
+        </form>
+        <ul class="shelf" id="shelf"></ul>
+      </div>
+    </section>
+  </main>
+
+  <div class="wrap">
+    <footer>
+      <span class="logo">روافد</span>
+      <span>موقع للثقافة والشعر الموريتاني</span>
+    </footer>
+  </div>
+</div>
+
+<script>
+(function () {
+  var CH = [
+    { tab: "لغن", title: "لغن: شعر الحسانية",
+      body: ["لغن هو شعر اللهجة الحسانية، وهي لهجة عربية يتكلمها الموريتانيون في البيت والمجلس. يقال في الغزل والفخر والرثاء والحكمة، ويلقى في السمر أكثر مما يقرأ في الكتب.",
+             "ومن هنا جاء وصف موريتانيا بأنها بلاد المليون شاعر: الشعر فيها كلام الناس اليومي قبل أن يكون فناً للمختصين."],
+      terms: [["لغن", "الشعر بالحسانية، يقال ويغنّى."], ["التبراع", "غزل تنظمه النساء بالحسانية."], ["الحسانية", "اللهجة العربية السائدة في موريتانيا."]] },
+    { tab: "المنظومات", title: "المنظومات: علم يحفظ بالشعر",
+      body: ["نظم الموريتانيون العلم شعراً ليسهل حفظه: فقه وأصول ونحو وسيرة وحساب. وكان الطالب يحفظ المنظومة أولاً ثم يفهمها على شيخه.",
+             "من أشهر ما بقي من هذا الباب «مراقي السعود» لسيدي عبد الله بن الحاج إبراهيم في أصول الفقه."],
+      terms: [["المنظومة", "علم مصوغ في أبيات قصيرة الوزن."], ["الرجز", "بحر خفيف كثر النظم عليه لسهولة حفظه."], ["المتن", "النص الأصلي الذي يشرحه الشيخ."]] },
+    { tab: "المحظرة", title: "المحظرة: مدرسة تسير مع الحي",
+      body: ["المحظرة مدرسة تقوم في البادية وتتنقل مع أهلها. يجلس الطلاب حول الشيخ، يحفظون المتون ويدرسون القرآن والفقه والنحو واللغة والأدب.",
+             "من هذه المدارس خرج أكثر علماء شنقيط وشعرائها، وفيها تعلّم الناس أن الشعر والعلم يسيران معاً."],
+      terms: [["المحظرة", "مدرسة تقليدية في البادية والمدن."], ["الشيخ", "المعلّم الذي يجلس إليه الطلاب."], ["الطالب", "من يتفرغ لطلب العلم في المحظرة."]] },
+    { tab: "الألحان", title: "الألحان: وتر يرافق القصيدة",
+      body: ["لا ينفصل الشعر الحساني عن الغناء. يرافقه الرجال بالتيدنيت وتعزف النساء على الآردين، فيصير البيت لحناً يتوارثه المجلس.",
+             "وفي هذه الفنون أسماء وأسر حفظت الأنغام والقصائد جيلاً بعد جيل."],
+      terms: [["التيدنيت", "عود تقليدي يعزفه الرجال."], ["الآردين", "قيثارة تعزفها النساء."]] },
+    { tab: "المدن", title: "المدن: حيث تحفظ المخطوطات",
+      body: ["شنقيط وودان وتيشيت وولاتة مدن قديمة في الصحراء كانت محطات للقوافل ومراكز للعلم. وقد سجلتها اليونسكو على قائمة التراث العالمي سنة 1996.",
+             "تحتفظ مكتباتها الأسرية بآلاف المخطوطات في الفقه واللغة والشعر والتاريخ."],
+      terms: [["شنقيط", "مدينة في الأدرار، منها اشتق اسم «بلاد شنقيط»."], ["ودان", "مدينة قديمة في الأدرار."], ["تيشيت", "مدينة قديمة في منطقة تكانت."], ["ولاتة", "مدينة في أقصى شرق موريتانيا."]] }
+  ];
+
+  var tabs = document.getElementById("tabs");
+  var river = document.getElementById("river");
+  var title = document.getElementById("ch-title");
+  var body = document.getElementById("ch-body");
+  var terms = document.getElementById("ch-terms");
+  var buttons = [];
+
+  function setRiver(i) {
+    var gs = river.querySelectorAll("g");
+    for (var k = 0; k < gs.length; k++) gs[k].setAttribute("class", Number(gs[k].getAttribute("data-i")) === i ? "on" : "");
+  }
+  function show(i) {
+    var c = CH[i];
+    title.textContent = c.title;
+    body.textContent = "";
+    c.body.forEach(function (t) { var p = document.createElement("p"); p.textContent = t; body.appendChild(p); });
+    terms.textContent = "";
+    c.terms.forEach(function (t) {
+      var dt = document.createElement("dt"); dt.textContent = t[0];
+      var dd = document.createElement("dd"); dd.textContent = t[1];
+      terms.appendChild(dt); terms.appendChild(dd);
+    });
+    buttons.forEach(function (b, k) { b.setAttribute("aria-selected", k === i ? "true" : "false"); b.tabIndex = k === i ? 0 : -1; });
+    setRiver(i);
+    current = i;
+  }
+  var current = 0;
+  CH.forEach(function (c, i) {
+    var li = document.createElement("li");
+    var b = document.createElement("button");
+    b.className = "trib"; b.type = "button"; b.setAttribute("role", "tab"); b.textContent = c.tab;
+    b.addEventListener("click", function () { show(i); });
+    b.addEventListener("mouseenter", function () { setRiver(i); });
+    b.addEventListener("mouseleave", function () { setRiver(current); });
+    b.addEventListener("keydown", function (e) {
+      var n = null;
+      if (e.key === "ArrowLeft") n = (i + 1) % CH.length;
+      if (e.key === "ArrowRight") n = (i - 1 + CH.length) % CH.length;
+      if (n !== null) { e.preventDefault(); show(n); buttons[n].focus(); }
+    });
+    li.appendChild(b); tabs.appendChild(li); buttons.push(b);
+  });
+  show(0);
+
+  /* contribution shelf, kept in this browser only */
+  var KEY = "rawafid-shelf";
+  var shelf = document.getElementById("shelf");
+  var form = document.getElementById("form");
+  var msg = document.getElementById("msg");
+  var clearBtn = document.getElementById("clear");
+  var items = [];
+  try { var raw = localStorage.getItem(KEY); if (raw) items = JSON.parse(raw) || []; } catch (e) { items = []; }
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(items)); } catch (e) {} }
+
+  function render() {
+    shelf.textContent = "";
+    clearBtn.hidden = items.length === 0;
+    if (!items.length) {
+      var li = document.createElement("li");
+      li.className = "empty";
+      var s = document.createElement("strong"); s.textContent = "الرف فارغ بعد";
+      li.appendChild(s);
+      li.appendChild(document.createTextNode("ما تكتبه في النموذج يظهر هنا."));
+      shelf.appendChild(li);
+      return;
+    }
+    items.slice().reverse().forEach(function (it) {
+      var li = document.createElement("li"); li.className = "piece";
+      if (it.title) { var h = document.createElement("h3"); h.textContent = it.title; li.appendChild(h); }
+      var pre = document.createElement("pre"); pre.textContent = it.text; li.appendChild(pre);
+      var by = document.createElement("div"); by.className = "by"; by.textContent = (it.name ? it.name + " · " : "") + it.date;
+      li.appendChild(by); shelf.appendChild(li);
+    });
+  }
+  render();
+
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    var text = document.getElementById("f-text").value.trim();
+    if (!text) { msg.textContent = "اكتب النص أولاً."; document.getElementById("f-text").focus(); return; }
+    var d = new Date();
+    items.push({ title: document.getElementById("f-title").value.trim(), name: document.getElementById("f-name").value.trim(), text: text, date: d.toLocaleDateString("ar-MR") });
+    save(); render(); form.reset(); msg.textContent = "أضيف النص إلى الرف.";
+  });
+
+  var armed = null;
+  clearBtn.addEventListener("click", function () {
+    if (!armed) {
+      clearBtn.textContent = "تأكيد المسح";
+      armed = setTimeout(function () { armed = null; clearBtn.textContent = "مسح الكل"; }, 4000);
+      return;
+    }
+    clearTimeout(armed); armed = null; clearBtn.textContent = "مسح الكل";
+    items = []; save(); render(); msg.textContent = "مُسح الرف.";
+  });
+})();
+</script>
+
+</body>
+</html>
